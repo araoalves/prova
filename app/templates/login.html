@@ -22,32 +22,28 @@
         <div class="card card-login mx-auto mt-5" style="max-width:450px">
             <div class="card-header">Login</div>
             <div class="card-body">
-                <form>
+                <form action="#" method="POST">
+                    {{ form.csrf_token }}
                     <div class="form-group">
                         <div class="form-label-group">
-                            <input type="email" id="inputEmail" class="form-control" placeholder="Email address"
-                                required="required" autofocus="autofocus">
-                            <label for="inputEmail">Email address</label>
+                            {{ form.username(class="form-control",
+                                placeholder="Nome de usuário") }}
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-label-group">
-                            <input type="password" id="inputPassword" class="form-control" placeholder="Password"
-                                required="required">
-                            <label for="inputPassword">Password</label>
+                            {{ form.password(class="form-control",
+                                placeholder="Senha") }}
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" value="remember-me">
-                                Relembrar Senha
-                            </label>
-                        </div>
+                    <div class="checkbox">
+                        <label>
+                            {{ form.remember_me }}Remember me
+                        </label>
                     </div>
-                    <a class="btn btn-primary btn-block" href="{{ url_for('index') }}">Login</a>
+                    <button type="submit" class="btn btn-primary">Login</button>
                 </form>
-                <div class="text-center mt-3">
+                <div class="text-center mt-2">
                     <a class="d-block small" href="#">Esqueceu a senha?</a>
                 </div>
             </div>
