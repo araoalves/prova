@@ -1,5 +1,40 @@
 {% extends 'base.html' %}
 
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Home</a></li>
+{% endblock %}
+
 {% block content %}
-    <h1>Bem-vindo!</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-10">
+        <div class="card-body">
+            <h1 class="card-title">Bem-vindo!</h1>
+            <p class="card-text"><h6>Serviço para cadastro de alunos e cursos.</h6></p>
+        </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--card de Cursos-->
+        <div class="col-sm-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Cursos<span class="fas fa-book ml-2"></span></h5>
+                    <p class="card-text">Cursos cadastrados</p>
+                    <a href="#" class="btn btn-primary">Acessar serviço</a>
+                </div>
+            </div>
+        </div>
+        <!--card de Alunos-->
+        <div class="col-sm-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Alunos<span class="fas fa-user-graduate ml-2"></span></h5>
+                    <p class="card-text">Alunos cadastrados</p>
+                    <a href="#" class="btn btn-primary">Acessar serviço</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
