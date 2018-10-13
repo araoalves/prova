@@ -1,10 +1,17 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 
 #criando uma instancia do flask
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage.db'
+app.config.from_object('config')
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-#importando do controllers o modulo default
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
+
+#importando dos meus modulos models e controllers
+from app.models import tabels
 from app.controllers import default
