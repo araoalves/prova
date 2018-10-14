@@ -17,17 +17,19 @@
 </head>
 
 <body class="bg-default">
-    {% with messages = get_flashed_messages() %}
+    <!--Menssagens de alerta-->
+    {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="alert alert-info">
+            {% for category, message in messages %}
                 <ul class="flashes">
-                    {% for message in messages %}
+                    <div class="alert alert-{{ category }}">
                         <li>{{ message }}</li>
-                    {% endfor %}
+                    </div>
                 </ul>
-            </div>
+            {% endfor %}
         {% endif %}
     {% endwith %}
+
     <div class="container">
         <div class="text-center">
             <img src="{{ url_for('static', filename='img/ceuma.png') }}">
@@ -63,6 +65,10 @@
         </div>
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    </script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}">
+    </script>
     <script>
         $( document ).ready(function() {
             //fecha o aviso automaticamente apos 2 segundos

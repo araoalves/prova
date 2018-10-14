@@ -19,6 +19,9 @@ manager.add_command('db', MigrateCommand)
 #intsncia do gerenciador de Login
 login_manager = LoginManager()
 login_manager.init_app(app)
+#retorna para o login para fazer a validação do usuario logado
+login_manager.login_view = 'login'
+login_manager.login_message = u"Por favor, é preciso está logado!"
 
 #importando dos meus modulos models e controllers
 from app.models import tabels
