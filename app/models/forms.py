@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, IntegerField
+from app import db
+from wtforms import StringField, PasswordField, BooleanField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Email
 
 #Formulario de Login
@@ -16,7 +17,8 @@ class CreateCourse(FlaskForm):
 
 #Formulario de cadastro de alunos
 class CreateStudent(FlaskForm):
+    course_id = SelectField('courses', choices=[], validators=[DataRequired()])
     cpd = IntegerField('cpd', validators=[DataRequired()])
-    nome = StringField('nome', validators=[DataRequired()])
+    name = StringField('name', validators=[DataRequired()])
     cpf = StringField('cpf', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired(), Email()])

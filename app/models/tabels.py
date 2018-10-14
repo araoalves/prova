@@ -23,7 +23,7 @@ class Student(db.Model):
     name = db.Column(db.String(100), nullable=False)
     cpf = db.Column(db.String(11), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('cursos.id'))
+    course_id = db.Column(db.Integer, db.ForeignKey('cursos.id'), nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
     #relaciona com a tabela de cursos
