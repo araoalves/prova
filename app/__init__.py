@@ -17,7 +17,8 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
 #intsncia do gerenciador de Login
-login_manager = LoginManager(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 #importando dos meus modulos models e controllers
 from app.models import tabels

@@ -65,14 +65,13 @@ class Phone(db.Model):
 
 #Classe do Modelo de usuario do sistema
 class User(db.Model):
-    __tablename__ = "usuarios"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(16), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
 
     def __repr__(self):
-        return "<User %r>" %self.username
+        return "<User {}>".format(self.username)
 
     #propriedades para que a validação de login funcione corretamente
     @property
