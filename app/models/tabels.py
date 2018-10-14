@@ -8,12 +8,12 @@ class Course(db.Model):
     codigo = db.Column(db.String(6), unique=True, nullable=False)
     course = db.Column(db.String(80), nullable=False)
     workload = db.Column(db.Integer, nullable=False)
-    created = db.Column(db.DateTime, default=datetime.utcnow)
-    updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
+    created = db.Column(db.DateTime, default=datetime.now())
+    updated = db.Column(db.DateTime, onupdate=datetime.now())
 
     #retorna nomes dos cursos nas consultas ao BD
     def __repr__(self):
-        return "<Course %r>" %self.name
+        return "<Course %r>" %self.course
 
 #Classe do modela da tabela de alunos
 class Student(db.Model):

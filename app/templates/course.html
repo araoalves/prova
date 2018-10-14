@@ -8,7 +8,7 @@
 {% block content %}
 <div class="row">
     <div class="col"> <!--Botão para cadastrar novo curso-->
-        <button type="button" class="btn btn-primary my-2" data-toggle="modal" data-target="#courseModal">
+        <button type="button" class="btn btn-primary my-2" data-toggle="modal" data-target=".bd-example-modal-sm">
             Cadastrar Curso
         </button>
     </div>
@@ -22,34 +22,62 @@
             <th>Curso</th>
             <th>Carga Horária</th>
             <th>Data de Cadastro</th>
+            <th>Ações</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>Sem registros</td>
-        </tr>
+        {% for course in courses %}
+            <tr>
+                <td>{{ course.codigo }}</td>
+                <td>{{ course.course }}</td>
+                <td>{{ course.workload }}</td>
+                <td>{{ course.created }}</td>
+                <td>  
+                    <button class="btn btn-warning btn-sm fas fa-edit"></button>
+                    <button class="btn btn-danger btn-sm fas fa-trash-alt"></button>
+                </td>
+            </tr>
+        {% endfor %}
     </tbody>
 </table>
 
 <!-- Modal -->
-<div class="modal fade" id="courseModal" tabindex="-1" role="dialog" aria-labelledby="courseModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fas fa-book" id="courseModalLabel">Cadastrar Curso</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="#">
-                        
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-success">Salvar</button>
-            </div>
+            <form action="{{ url_for('course') }}" method="POST">
+                {{ form.csrf_token }}
+                <div class="modal-header">
+                    <h5 class="modal-title fas fa-book" id="courseModalLabel">Cadastrar Curso</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            {{ form.codigo(class="form-control",
+                            placeholder="Código do curso") }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            {{ form.course(class="form-control",
+                            placeholder="Nome do curso") }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            {{ form.workload(class="form-control",
+                            placeholder="Carga horária do curso") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

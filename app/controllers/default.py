@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, login_manager
 
-from app.models.tabels import User
-from app.models.forms import LoginForm
+from app.models.tabels import User, Course
+from app.models.forms import LoginForm, CreateCourse
 
 #carrega o usuario logado e retorna as informações dele
 @login_manager.user_loader
@@ -42,10 +42,17 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/cursos")
+@app.route("/cursos", methods=["GET", "POST"])
 @login_required
 def course():
-    return render_template("course.html")
+    form = CreateCourse()
+    if form.validate_on_submit():
+        course = Course(codigo=form.codigo.data, 
+            course=form.course.data, workload=form.workload.data)
+        db.session.add(course)
+        db.session.commit()
+    courses = Course.query.all()
+    return render_template("course.html", courses=courses,form=form)
 
 
 @app.route("/alunos")
