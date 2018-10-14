@@ -8,11 +8,50 @@
 {% block content %}
 <div class="row">
     <div class="col"> <!--Botão para cadastrar novo curso-->
-        <button type="button" class="btn btn-primary my-2">
+        <button type="button" class="btn btn-primary my-2" data-toggle="modal" data-target="#courseModal">
             Cadastrar Curso
         </button>
     </div>
-    
+</div>
+
+<!--Tabela de cursos cadastrado-->
+<table class="table table-striped table-responsive-sm">
+    <thead class="thead-light">
+        <tr>
+            <th>Código</th>
+            <th>Curso</th>
+            <th>Carga Horária</th>
+            <th>Data de Cadastro</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Sem registros</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="courseModal" tabindex="-1" role="dialog" aria-labelledby="courseModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fas fa-book" id="courseModalLabel">Cadastrar Curso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="#">
+                        
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-success">Salvar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
