@@ -25,13 +25,21 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>Sem registros</td>
-        </tr>
+        {% for student in students %}
+            <tr>
+                <td>{{ student.cpd }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.course_id.course }}</td>
+                <td>  
+                    <button type="button" class="btn btn-warning btn-sm fas fa-edit" data-toggle="modal" data-target=".editar-modal-sm"></button>
+                    <a class="btn btn-danger btn-sm fas fa-trash-alt" href="#"></a>
+                </td>
+            </tr>
+        {% endfor %}
     </tbody>
 </table>
     
-<!-- Modal cadastrar-->
+<!-- Modal com o formulario para cadastrar novos alunos no sistema-->
 <div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="studentModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

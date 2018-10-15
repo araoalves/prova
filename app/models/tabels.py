@@ -1,9 +1,8 @@
 from app import db
 from datetime import datetime
 
-#Classes dos modelos das tabelas
+#Classe do modelo da tabela de cursos
 class Course(db.Model):
-    __tablename__ = "cursos" #muda o nome da tabela
     id = db.Column(db.Integer, primary_key=True)
     codigo = db.Column(db.String(6), unique=True, nullable=False)
     course = db.Column(db.String(80), nullable=False)
@@ -17,17 +16,16 @@ class Course(db.Model):
 
 #Classe do modela da tabela de alunos
 class Student(db.Model):
-    __tablename__ = "alunos"
     id = db.Column(db.Integer, primary_key=True)
     cpd = db.Column(db.Integer, unique=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
     cpf = db.Column(db.String(11), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('cursos.id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
     #relaciona com a tabela de cursos
-    course = db.relationship('Course', foreign_keys=course_id)
+    course = db.relationship('Course', backref='students', lazy=True)
 
     #retorna o nome dos estudantes nas consultas ao BD
     def __repr__(self):
@@ -35,16 +33,15 @@ class Student(db.Model):
 
 #Classe de modelo de tabela do Endereço
 class Address(db.Model):
-    __tablename__ = "endereco"
     id = db.Column(db.Integer, primary_key=True)
     cep = db.Column(db.String(8), nullable=False)
     state = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
     street = db.Column(db.String(50), nullable=False)
     bairro = db.Column(db.String(50), nullable=False)
-    student_id = db.Column(db.Integer, db.ForeignKey('alunos.id'))
-    #relaciona a classe Address ao id do aluno
-    student = db.relationship('Student', foreign_keys=student_id)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    #relaciona a classe Address a tabela de alunos
+    student = db.relationship('Student', backref='address', lazy=True)
 
     #retorna a lista dos id de endereços
     def __repr__(self):
@@ -52,12 +49,11 @@ class Address(db.Model):
 
 #Classe do modela da tabela de telefone
 class Phone(db.Model):
-    __tablename__ = "telefone"
     id = db.Column(db.Integer, primary_key=True)
     phone = db.Column(db.String(11), nullable=False)
-    student_id = db.Column(db.Integer, db.ForeignKey('alunos.id'))
-    #relaciona a classe Phone ao id do aluno
-    student = db.relationship('Student', foreign_keys=student_id)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    #relaciona a classe Phone a tabela de alunos
+    student = db.relationship('Student', backref='phone', lazy=True)
 
     #retorna a lista de telefones
     def __repr__(self):
@@ -67,24 +63,36 @@ class Phone(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
 
     def __repr__(self):
         return "<User {}>".format(self.username)
 
     #propriedades para que a validação de login funcione corretamente
+    '''
+    verifica se usuario está autenticado
+    '''
     @property
     def is_authenticated(self):
         return True
 
+    '''
+    verifica se o usuario está ativo no sistema
+    '''
     @property
     def is_active(self):
         return True
 
+    '''
+    verifica se o usuario esta como anônimo no sietma ou logado com usuario
+    '''
     @property
     def is_anonymous(self):
         return False
 
+    '''
+    pega o ID do usuario com a sessão ativa
+    '''
     def get_id(self):
         return str(self.id)
