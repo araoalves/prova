@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, login_manager
 
-from app.models.tabels import User, Course, Student
+from app.models.tabels import User, Course, Student, Address, Phone
 from app.models.forms import LoginForm, CreateCourse, CreateStudent
 
 #carrega o usuario logado e retorna as informações dele
@@ -51,17 +51,39 @@ def course():
             course=form.course.data, workload=form.workload.data)
         db.session.add(course)
         db.session.commit()
-    courses = Course.query.all()
+    courses = Course.query.order_by(Course.course).all()
     return render_template("course.html", courses=courses,form=form)
 
 
-@app.route("/alunos")
+@app.route("/editar/<int:id>", methods=["GET", "POST"])
+@login_required
+def editar(id):
+    pass
+
+
+@app.route("/excluir/<int:id>")
+@login_required
+def excluir(id):
+    course = Course.query.filter_by(id=id).first()
+    db.session.delete(course)
+    db.session.commit()
+    flash('Curso excluído com sucesso.', 'success')
+    return redirect(url_for('course'))
+
+
+@app.route("/alunos", methods=["GET", "POST"])
 @login_required
 def student():
     form = CreateStudent()
-    form.course_id.choices = [(course.id, course.course) for course in Course.query.all()]
+    form.course_id.choices = [(course.id, course.course) for course in Course.query.order_by(Course.course).all()]
     if form.validate_on_submit():
-        student = Student(cpd=form.cpf.data, name=form.name.data, 
-            cpf=form.cpf.data, email=form.email.data)
-        print(student)
+        student = Student(course_id=form.course_id.data, cpd=form.cpd.data, name=form.name.data, cpf=form.cpf.data, email=form.email.data)
+        db.session.add(student)
+        db.session.commit()
+        phone = Phone(phone=form.phone.phone.data, student_id=student.id)
+        address = Address(student_id=student.id, cep=form.address.cep.data, state=form.address.state.data,
+            city=form.address.city.data, street=form.address.street.data, bairro=form.address.bairro.data)
+        db.session.add(phone)
+        db.session.add(address)
+        db.session.commit()
     return render_template("student.html", form=form)
