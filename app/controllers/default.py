@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, login_manager
+import xlsxwriter
 
 from app.models.tabels import User, Course, Student, Address
 from app.models.forms import LoginForm, CreateCourse, CreateStudent, AddressForm
@@ -189,8 +190,83 @@ def excluir_student(id):
     flash('Aluno excluído com sucesso.', 'success')
     return redirect(url_for('student'))
 
-
-@app.route("/relatorio", methods=["GET", "POST"])
+#################
+#RELATÓRIO
+@app.route("/relatorio", methods=["GET"])
 @login_required
 def report():
-    return render_template("report/report.html")
+    '''
+    Funcionalidade para listar os cursos e os seus respectivos alunos
+    '''
+    courses = Course.query.order_by(Course.course).all()
+    total_course = len(courses)
+    return render_template("report/report.html", courses=courses, total_course=total_course)
+
+
+@app.route("/relatorio/pdf", methods=["GET"])
+@login_required
+def report_pdf():
+    '''
+    Funcionalidade para gerar PDF do relatório
+    '''
+    courses = Course.query.order_by(Course.course).all()
+    total_course = len(courses)
+    return render_template("report/pdf.html", courses=courses, total_course=total_course)
+
+
+@app.route("/report/excel")
+@login_required
+def report_excel():
+    '''
+    Funcionalidade para gerar arquivo excel do relatório
+    '''
+    # cria o arquivo em excel
+    workbook = xlsxwriter.Workbook('RelatorioCursos.xlsx')
+    worksheet = workbook.add_worksheet()
+
+    #Adicione um formato em negrito para usar no cabeçalho.
+    bold = workbook.add_format({'bold': True})
+    #Cabeçalho da tabela
+    worksheet.write('A1', 'Curso', bold)
+    worksheet.write('B1', 'Aluno', bold)
+    worksheet.write('C1', 'CPD', bold)
+    worksheet.write('D1', 'CPF', bold)
+    worksheet.write('E1', 'Telefone', bold)
+    worksheet.write('F1', 'E-mail', bold)
+    worksheet.write('G1', 'Estado', bold)
+    worksheet.write('H1', 'Cidade', bold)
+    worksheet.write('I1', 'Data de Cadastro', bold)
+
+    #Dados que serão escritos na planilha
+    courses = Course.query.order_by(Course.course).all()
+    total_course = len(courses)
+
+    # percorre as celulas e inseri os dados
+    row = 1
+    for x in range(total_course):
+        students = len(courses[x].student_course)
+        for y in range(students):
+            col = 0
+            worksheet.write(row, col, courses[x].course)
+            col+=1
+            worksheet.write(row, col, courses[x].student_course[y].name)
+            col+=1
+            worksheet.write(row, col, courses[x].student_course[y].cpd)
+            col+=1
+            worksheet.write(row, col, courses[x].student_course[y].cpf)
+            col+=1
+            worksheet.write(row, col, courses[x].student_course[y].phone)
+            col+=1
+            worksheet.write(row, col, courses[x].student_course[y].email)
+            col+=1
+            worksheet.write(row, col, courses[x].student_course[y].student_address[0].state)
+            col+=1
+            worksheet.write(row, col, courses[x].student_course[y].student_address[0].city)
+            col+=1
+            worksheet.write(row, col, courses[x].student_course[y].created)
+        
+            row += 1
+
+    workbook.close()
+    flash('Arquivo Excel gerado com sucesso.', 'success')
+    return redirect(url_for('report'))

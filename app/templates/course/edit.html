@@ -12,19 +12,19 @@
         <div class="form-group">
             <div class="form-label-group">
                 <label for="codigo">Código do Curso</label>
-                <input type="text" id="codigo" name="codigo" class="form-control" value="{{ course.codigo }}">
+                <input type="text" id="codigo" name="codigo" class="form-control" value="{{ course.codigo }}" required>
             </div>
         </div>
         <div class="form-group">
             <div class="form-label-group">
                 <label for="course">Nome do Curso</label>
-                <input type="text" id="course" name="course" class="form-control" value="{{ course.course }}">
+                <input type="text" id="course" name="course" class="form-control" value="{{ course.course }}" required>
             </div>
         </div>
         <div class="form-group">
             <div class="form-label-group">
                     <label for="workload">Carga Horária</label>
-                    <input type="number" id="workload" name="workload" class="form-control" value="{{ course.workload }}">
+                    <input type="number" id="workload" name="workload" class="form-control" value="{{ course.workload }}" required>
             </div>
         </div>
         <a class="btn btn-secondary" href="{{ url_for('course') }}">Cancelar</a>

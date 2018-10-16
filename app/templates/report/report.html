@@ -4,3 +4,54 @@
     <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
     <li class="breadcrumb-item active">Relatório</li>
 {% endblock %}
+
+{% block content %}
+    <div class="container" style="text-align:center; display: flex; justify-content: center">
+        <div class="row">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <h4>Listagem dos cursos com seus respectivos alunos</h4>
+                </li>
+                <li class="list-inline my-2">
+                    Exportar para:
+                    <a class="btn btn-danger btn-md fas fa-file-pdf" href="{{ url_for('report_pdf') }}" target="_blank">PDF</a>
+                    <a class="btn btn-success btn-md fas fa-file-excel" href="{{ url_for('report_excel') }}">EXCEL</a>
+                </li>
+                <li class="list-group-item">
+                    <table class="table table-bordered table-responsive-sm">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Curso</th>
+                                <th>Aluno</th>
+                                <th>CPD</th>
+                                <th>CPF</th>
+                                <th>Telefone</th>
+                                <th>E-mail</th>
+                                <th>Estado</th>
+                                <th>Cidade</th>
+                                <th style="width:200px">Data de Cadastro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             {% for x in range(total_course) %}
+                                {% for y in range(courses[x].student_course|length) %}
+                                    <tr>
+                                        <td class="font-weight-bold">{{ courses[x].course }}</td>
+                                        <td>{{ courses[x].student_course[y].name }}</td>
+                                        <td>{{ courses[x].student_course[y].cpd }}</td>
+                                        <td>{{ courses[x].student_course[y].cpf }}</td>
+                                        <td>{{ courses[x].student_course[y].phone }}</td>
+                                        <td>{{ courses[x].student_course[y].email }}</td>
+                                        <td>{{ courses[x].student_course[y].student_address[0].state }}</td>
+                                        <td>{{ courses[x].student_course[y].student_address[0].city }}</td>
+                                        <td>{{ courses[x].student_course[y].created.strftime('%d/%m/%Y - %H:%M') }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
