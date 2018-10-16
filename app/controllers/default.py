@@ -68,12 +68,14 @@ def course():
     funcionalidade para listar os cursos cadastrados no sistema e carregar o formulario de cadastro
     '''
     form = CreateCourse()
-    if form.validate_on_submit():
+    if request.method == "POST" and form.validate():
         course = Course(codigo=form.codigo.data, 
             course=form.course.data, workload=form.workload.data)
         db.session.add(course)
         db.session.commit()
         return redirect(url_for('course'))
+    else:
+        flash('Dados preenchidos incorretos.', 'warning')
     courses = Course.query.order_by(Course.course).all()
     return render_template("course/course.html", courses=courses, form=form)
 
@@ -136,7 +138,7 @@ def student():
     '''
     form = CreateStudent()
     form.course_id.choices = [(course.id, course.course) for course in Course.query.order_by(Course.course).all()]
-    if request.method == "POST":
+    if request.method == "POST" and form.validate():
         course = Course.query.filter_by(id=form.course_id.data).first()
         student = Student(cpd=form.cpd.data, name=form.name.data, cpf=form.cpf.data, email=form.email.data, phone=form.phone.data, student_id=course)
         db.session.add(student)
