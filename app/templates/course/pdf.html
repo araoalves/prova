@@ -29,15 +29,19 @@
                                 <th>Curso</th>
                                 <th>Carga Horária</th>
                                 <th>Quantidade de Alunos</th>
+                                <th>Data de Cadastro</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>{{ course.codigo }}</td>
-                                <td>{{ course.course }}</td>
-                                <td>{{ course.workload }}</td>
-                                <td>{{ course.student_course|length }}</td>
-                            </tr>
+                            {% for course in courses %}
+                                <tr>
+                                    <td>{{ course.codigo }}</td>
+                                    <td>{{ course.course }}</td>
+                                    <td>{{ course.workload }}</td>
+                                    <td>{{ course.student_course|length }}</td>
+                                    <td>{{ course.created.strftime('%d/%m/%Y - %H:%M') }}</td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </li>

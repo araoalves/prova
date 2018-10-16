@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, login_manager
 
 from app.models.tabels import User, Course, Student, Address
-from app.models.forms import LoginForm, CreateCourse, CreateStudent
+from app.models.forms import LoginForm, CreateCourse, CreateStudent, AddressForm
 
 ###################
 #LOGIN
@@ -43,19 +43,16 @@ def logout():
     logout_user()
     flash('Sessão encerrada.', 'info')
     return redirect("login")
-
 #FIM LOGIN
 ##################
 
 ##################
 #INDEX
-
 @app.route("/index")
 @login_required
 def index():
     #retorna para a pagina principal do sistema
     return render_template('index.html')
-
 #FIM INDEX
 ##################
 
@@ -73,9 +70,8 @@ def course():
             course=form.course.data, workload=form.workload.data)
         db.session.add(course)
         db.session.commit()
+        flash('Curso cadastrado com sucesso.', 'success')
         return redirect(url_for('course'))
-    else:
-        flash('Dados preenchidos incorretos.', 'warning')
     courses = Course.query.order_by(Course.course).all()
     return render_template("course/course.html", courses=courses, form=form)
 
@@ -88,7 +84,7 @@ def editar_course(id):
     '''
     form = CreateCourse()
     course = Course.query.filter_by(id=id).first_or_404()
-    if request.method == "POST":
+    if request.method == "POST" and form.validate():
         course.codigo = form.codigo.data
         course.course = form.course.data
         course.workload = form.workload.data
@@ -115,15 +111,14 @@ def excluir_course(id):
     return redirect(url_for('course'))
 
 
-@app.route("/pdf/<int:id>", methods=["GET"])
+@app.route("/pdf", methods=["GET"])
 @login_required
-def pdf(id):
+def pdf():
     '''
     Funcionalidade para gerar o PDF com as informações dos cursos
     '''
-    course = Course.query.filter_by(id=id).first_or_404()
-    return render_template("course/pdf.html", course=course)
-
+    courses = Course.query.order_by(Course.course).all()
+    return render_template("course/pdf.html", courses=courses)
 #FIM CURSO
 ##################
 
@@ -146,6 +141,7 @@ def student():
             city=form.address.city.data, street=form.address.street.data, bairro=form.address.bairro.data, address_id=student)
         db.session.add(address)
         db.session.commit()
+        flash('Aluno cadastrado com sucesso.', 'success')
         return redirect(url_for('student'))
     students = Student.query.order_by(Student.name).all()
     return render_template("student/student.html", students=students, form=form)
@@ -158,6 +154,7 @@ def editar_student(id):
     Funcionalidade para editar o aluno escolhido pegando pelo ID do aluno
     '''
     form = CreateStudent()
+    form2 = AddressForm()
     form.course_id.choices = [(course.id, course.course) for course in Course.query.order_by(Course.course).all()]
     student = Student.query.filter_by(id=id).first_or_404()
     if request.method == "POST":
@@ -166,14 +163,13 @@ def editar_student(id):
         student.cpf = form.cpf.data
         student.email = form.email.data
         student.phone = form.phone.data
-        # student.student_address[0].cep = form.cep
-        # student.student_address[0].state = form.state.data
-        # student.student_address[0].city = form.city.data
-        # student.student_address[0].bairro = form.bairro.data
-        # student.student_address[0].street = form.street.data
-        print(student)
-        # db.session.add(student)
-        # db.session.commit()
+        student.student_address[0].cep = form2.cep.data
+        student.student_address[0].state = form2.state.data
+        student.student_address[0].city = form2.city.data
+        student.student_address[0].bairro = form2.bairro.data
+        student.student_address[0].street = form2.street.data
+        db.session.add(student)
+        db.session.commit()
         flash('Aluno editado com sucesso.', 'success')
         return redirect(url_for('student'))
     return render_template("student/edit.html", student=student, form=form)
