@@ -10,6 +10,9 @@ class Course(db.Model):
     created = db.Column(db.DateTime, default=datetime.now())
     updated = db.Column(db.DateTime, onupdate=datetime.now())
 
+    #relaciona com a tabela de alunos
+    student_course = db.relationship('Student', backref='student_id')
+
     #retorna nomes dos cursos nas consultas ao BD
     def __repr__(self):
         return "<Course %r>" %self.course
@@ -21,11 +24,13 @@ class Student(db.Model):
     name = db.Column(db.String(100), nullable=False)
     cpf = db.Column(db.String(11), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
+    phone = db.Column(db.String(11), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
-    #relaciona com a tabela de cursos
-    course = db.relationship('Course', backref='students', lazy=True)
+
+    #relaciona a classe de alunos com a de endereço
+    student_address = db.relationship('Address', backref='address_id')
 
     #retorna o nome dos estudantes nas consultas ao BD
     def __repr__(self):
@@ -40,24 +45,10 @@ class Address(db.Model):
     street = db.Column(db.String(50), nullable=False)
     bairro = db.Column(db.String(50), nullable=False)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
-    #relaciona a classe Address a tabela de alunos
-    student = db.relationship('Student', backref='address', lazy=True)
 
     #retorna a lista dos id de endereços
     def __repr__(self):
         return "<Address %r>" %self.id
-
-#Classe do modela da tabela de telefone
-class Phone(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    phone = db.Column(db.String(11), nullable=False)
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
-    #relaciona a classe Phone a tabela de alunos
-    student = db.relationship('Student', backref='phone', lazy=True)
-
-    #retorna a lista de telefones
-    def __repr__(self):
-        return "<Phone %r>" %self.phone
 
 #Classe do Modelo de usuario do sistema
 class User(db.Model):

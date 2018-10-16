@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, login_manager
 
-from app.models.tabels import User, Course, Student, Address, Phone
+from app.models.tabels import User, Course, Student, Address
 from app.models.forms import LoginForm, CreateCourse, CreateStudent
 
 ###################
@@ -25,7 +25,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if (user is not None) and (user.password_hash == form.password.data):
+        if (user is not None) and (user.password == form.password.data):
             login_user(user, remember=form.remember_me.data)
             flash('Usuário %s logado!' %user.username, 'success')
             return redirect(url_for('index'))
@@ -75,28 +75,33 @@ def course():
         db.session.commit()
         return redirect(url_for('course'))
     courses = Course.query.order_by(Course.course).all()
-    return render_template("course.html", courses=courses, form=form)
+    return render_template("course/course.html", courses=courses, form=form)
 
 
-@app.route("/editar/<int:id>", methods=["GET", "POST"])
+@app.route("/cursos/editar/<int:id>", methods=["GET", "PUT"])
 @login_required
 def editar_course(id):
     '''
-    Funcionalidade para editar o curso escolhido pegando pelo ID
+    Funcionalidade para editar o curso escolhido pegando pelo ID do curso
     '''
-    pass
+    form = CreateCourse()
+    course = Course.query.filter_by(id=id).first_or_404()
+    return render_template("course/edit.html", course=course, form=form)
 
 
-@app.route("/excluir/<int:id>", methods=["GET", "DELETE"])
+@app.route("/cursos/excluir/<int:id>", methods=["GET", "DELETE"])
 @login_required
 def excluir_course(id):
     '''
     Funcionalidade para excluir o curso escolhido pegando o curso pelo ID
     '''
     course = Course.query.filter_by(id=id).first_or_404()
-    db.session.delete(course)
-    db.session.commit()
-    flash('Curso excluído com sucesso.', 'success')
+    if not course.student_course:
+        db.session.delete(course)
+        db.session.commit()
+        flash('Curso excluído com sucesso.', 'success')
+    else:
+        flash('Impossível excluir, curso possui alunos relacionados.', 'warning')
     return redirect(url_for('course'))
 
 #FIM CURSO
@@ -113,36 +118,34 @@ def student():
     '''
     form = CreateStudent()
     form.course_id.choices = [(course.id, course.course) for course in Course.query.order_by(Course.course).all()]
-    print("1")
     if request.method == "POST":
-        print("2")
-        course_id = Course.query.filter_by(id=form.course_id.data).first()
-        student = Student(course_id=form.course_id.data, cpd=form.cpd.data, name=form.name.data, cpf=form.cpf.data, email=form.email.data)
+        course = Course.query.filter_by(id=form.course_id.data).first()
+        student = Student(cpd=form.cpd.data, name=form.name.data, cpf=form.cpf.data, email=form.email.data, phone=form.phone.data, student_id=course)
         db.session.add(student)
-        db.session.commit()
-        phone = Phone(phone=form.phone.phone.data, student_id=student.id)
-        address = Address(student_id=student.id, cep=form.address.cep.data, state=form.address.state.data,
-            city=form.address.city.data, street=form.address.street.data, bairro=form.address.bairro.data)
-        db.session.add(phone)
+        address = Address(cep=form.address.cep.data, state=form.address.state.data,
+            city=form.address.city.data, street=form.address.street.data, bairro=form.address.bairro.data, address_id=student)
         db.session.add(address)
         db.session.commit()
+        return redirect(url_for('student'))
     students = Student.query.order_by(Student.name).all()
-    return render_template("student.html", students=students, form=form)
+    return render_template("student/student.html", students=students, form=form)
 
 
-# @app.route("/editar/<int:id>", methods=["GET", "POST"])
+# @app.route("/alunos/editar/<int:id>", methods=["GET", "POST"])
 # @login_required
 # def editar(id):
 #     pass
 
-# @app.route("/excluir/<int:id>", methods=["GET", "DELETE"])
-# @login_required
-# def excluir_course(id):
-#     '''
-#     Funcionalidade para excluir o curso escolhido pegando o curso pelo ID
-#     '''
-#     course = Course.query.filter_by(id=id).first()
-#     db.session.delete(course)
-#     db.session.commit()
-#     flash('Curso excluído com sucesso.', 'success')
-#     return redirect(url_for('course'))
+@app.route("/alunos/excluir/<int:id>", methods=["GET", "DELETE"])
+@login_required
+def excluir_student(id):
+    '''
+    Funcionalidade para excluir o aluno escolhido pegando o aluno pelo ID
+    '''
+    student = Student.query.filter_by(id=id).first_or_404()
+    address = Address.query.filter_by(id=student.student_address[0].id).first()
+    db.session.delete(student)
+    db.session.delete(address)
+    db.session.commit()
+    flash('Aluno excluído com sucesso.', 'success')
+    return redirect(url_for('student'))

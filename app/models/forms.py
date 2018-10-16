@@ -34,5 +34,5 @@ class CreateStudent(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     cpf = StringField('cpf', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired(), Email()])
+    phone = StringField('phone')
     address = FormField(AddressForm)
-    phone = FormField(PhoneForm)
