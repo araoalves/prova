@@ -1,4 +1,4 @@
-# Eventex
+# Prova
 
 Sistema de cadastro de cursos e alunos do CEUMA
 
