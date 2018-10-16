@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+        crossorigin="anonymous">
+    
+    <title>PDF Curso</title>
+
+</head>
+
+<body>
+
+    <div class="container" style="text-align:center; display: flex; justify-content: center">
+        <div class="row">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <h3>Dados do Curso</h3>
+                </li>
+                <li class="list-group-item">
+                    <table class="table table-bordered table-responsive-sm">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Curso</th>
+                                <th>Carga Horária</th>
+                                <th>Quantidade de Alunos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ course.codigo }}</td>
+                                <td>{{ course.course }}</td>
+                                <td>{{ course.workload }}</td>
+                                <td>{{ course.student_course|length }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+<script>
+    window.print();
+</script>
+
+</html>

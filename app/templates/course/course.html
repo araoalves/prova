@@ -6,9 +6,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="row mb-3">
     <div class="col"> <!--Botão para cadastrar novo curso-->
-        <button type="button" class="btn btn-primary my-2" data-toggle="modal" data-target=".bd-example-modal-sm">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">
             Cadastrar Curso
         </button>
     </div>
@@ -21,8 +21,8 @@
             <th style="width:100px">Código</th>
             <th style="width:250px">Curso</th>
             <th style="width:250px">Carga Horária</th>
-            <th style="width:250px">Data de Cadastro</th>
-            <th style="width:100px">Ações</th>
+            <th style="width:300px">Data de Cadastro</th>
+            <th style="width:200px">Ações</th>
         </tr>
     </thead>
     <tbody>
@@ -31,10 +31,11 @@
                 <td>{{ course.codigo }}</td>
                 <td>{{ course.course }}</td>
                 <td>{{ course.workload }}</td>
-                <td>{{ course.created }}</td>
+                <td>{{ course.created.strftime('%d/%m/%Y - %H:%M') }}</td>
                 <td>  
                     <a class="btn btn-warning fas fa-edit" href="{{ url_for('editar_course', id=course.id) }}"></a>
                     <a class="btn btn-danger fas fa-trash-alt" href="{{ url_for('excluir_course', id=course.id) }}"></a>
+                    <a class="btn btn-success fas fa-file-pdf" href="{{ url_for('pdf', id=course.id) }}" target="_blank">PDF</a>
                 </td>
             </tr>
         {% endfor %}

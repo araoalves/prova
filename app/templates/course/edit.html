@@ -8,7 +8,7 @@
 
 {% block content %}
     <h5 class="mb-4">Editar Curso</h5>
-    <form action="#" method="post">
+    <form action="{{ url_for('editar_course', id=course.id) }}" method="POST">
         <div class="form-group">
             <div class="form-label-group">
                 <label for="codigo">Código do Curso</label>
@@ -17,14 +17,14 @@
         </div>
         <div class="form-group">
             <div class="form-label-group">
-                <label for="curso">Nome do Curso</label>
-                <input type="text" id="curso" name="curso" class="form-control" value="{{ course.course }}">
+                <label for="course">Nome do Curso</label>
+                <input type="text" id="course" name="course" class="form-control" value="{{ course.course }}">
             </div>
         </div>
         <div class="form-group">
             <div class="form-label-group">
-                    <label for="ch">Carga Horária</label>
-                    <input type="number" id="ch" name="ch" class="form-control" value="{{ course.workload }}">
+                    <label for="workload">Carga Horária</label>
+                    <input type="number" id="workload" name="workload" class="form-control" value="{{ course.workload }}">
             </div>
         </div>
         <a class="btn btn-secondary" href="{{ url_for('course') }}">Cancelar</a>

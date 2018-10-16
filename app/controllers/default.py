@@ -78,7 +78,7 @@ def course():
     return render_template("course/course.html", courses=courses, form=form)
 
 
-@app.route("/cursos/editar/<int:id>", methods=["GET", "PUT"])
+@app.route("/cursos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 def editar_course(id):
     '''
@@ -86,6 +86,14 @@ def editar_course(id):
     '''
     form = CreateCourse()
     course = Course.query.filter_by(id=id).first_or_404()
+    if request.method == "POST":
+        course.codigo = form.codigo.data
+        course.course = form.course.data
+        course.workload = form.workload.data
+        db.session.add(course)
+        db.session.commit()
+        flash('Curso editado com sucesso.', 'success')
+        return redirect(url_for('course'))
     return render_template("course/edit.html", course=course, form=form)
 
 
@@ -103,6 +111,16 @@ def excluir_course(id):
     else:
         flash('Impossível excluir, curso possui alunos relacionados.', 'warning')
     return redirect(url_for('course'))
+
+
+@app.route("/pdf/<int:id>", methods=["GET"])
+@login_required
+def pdf(id):
+    '''
+    Funcionalidade para gerar o PDF com as informações dos cursos
+    '''
+    course = Course.query.filter_by(id=id).first_or_404()
+    return render_template("course/pdf.html", course=course)
 
 #FIM CURSO
 ##################
@@ -131,10 +149,33 @@ def student():
     return render_template("student/student.html", students=students, form=form)
 
 
-# @app.route("/alunos/editar/<int:id>", methods=["GET", "POST"])
-# @login_required
-# def editar(id):
-#     pass
+@app.route("/alunos/editar/<int:id>", methods=["GET", "POST"])
+@login_required
+def editar_student(id):
+    '''
+    Funcionalidade para editar o aluno escolhido pegando pelo ID do aluno
+    '''
+    form = CreateStudent()
+    form.course_id.choices = [(course.id, course.course) for course in Course.query.order_by(Course.course).all()]
+    student = Student.query.filter_by(id=id).first_or_404()
+    if request.method == "POST":
+        student.cpd = form.cpd.data
+        student.name = form.name.data
+        student.cpf = form.cpf.data
+        student.email = form.email.data
+        student.phone = form.phone.data
+        # student.student_address[0].cep = form.cep
+        # student.student_address[0].state = form.state.data
+        # student.student_address[0].city = form.city.data
+        # student.student_address[0].bairro = form.bairro.data
+        # student.student_address[0].street = form.street.data
+        print(student)
+        # db.session.add(student)
+        # db.session.commit()
+        flash('Aluno editado com sucesso.', 'success')
+        return redirect(url_for('student'))
+    return render_template("student/edit.html", student=student, form=form)
+
 
 @app.route("/alunos/excluir/<int:id>", methods=["GET", "DELETE"])
 @login_required
@@ -149,3 +190,9 @@ def excluir_student(id):
     db.session.commit()
     flash('Aluno excluído com sucesso.', 'success')
     return redirect(url_for('student'))
+
+
+@app.route("/relatorio", methods=["GET", "POST"])
+@login_required
+def report():
+    return render_template("report/report.html")

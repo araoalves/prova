@@ -35,7 +35,7 @@
                 <td>{{ student.student_address[0].state }}</td>
                 <td>{{ student.student_address[0].city }}</td>
                 <td>  
-                    <button type="button" class="btn btn-warning fas fa-edit" data-toggle="modal" data-target=".editar-modal-sm"></button>
+                    <a class="btn btn-warning fas fa-edit" href="{{ url_for('editar_student', id=student.id) }}"></a>
                     <a class="btn btn-danger fas fa-trash-alt" href="{{ url_for('excluir_student', id=student.id) }}"></a>
                 </td>
             </tr>
