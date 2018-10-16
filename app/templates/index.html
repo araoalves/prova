@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Home</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-10">
+        <div class="card-body">
+            <h1 class="card-title">Bem-vindo!</h1>
+            <p class="card-text"><h6>Serviço para cadastro de alunos e cursos.</h6></p>
+        </div>
+    </div>
+</div>  
+<div class="row">
+    <!--Card cursos-->
+    <div class="col-sm-4">
+        <div class="card text-white bg-primary o-hidden h-100">
+            <div class="card-body">
+                <div class="card-body-icon">
+                    <h5><i class="fas fa-fw fa-book mr-2"></i>Cursos</h5>
+                </div>
+            </div>
+            <a class="card-footer text-white clearfix small z-1" href="{{ url_for('course') }}">
+                <span class="float-left">Acessar Serviço</span>
+                <span class="float-right">
+                    <i class="fas fa-angle-right"></i>
+                </span>
+            </a>
+        </div>
+    </div>
+    
+    <!--Card alunos-->
+    <div class="col-sm-4">
+        <div class="card text-white bg-info o-hidden h-100">
+            <div class="card-body">
+                <div class="card-body-icon">
+                    <h5><i class="fas fa-fw fa-user-graduate mr-2"></i>Alunos</h5>
+                </div>
+            </div>
+            <a class="card-footer text-white clearfix small z-1" href="{{ url_for('student') }}">
+                <span class="float-left">Acessar Serviço</span>
+                <span class="float-right">
+                    <i class="fas fa-angle-right"></i>
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <!--Card relatorios-->
+    <div class="col-sm-4">
+        <div class="card text-white bg-warning o-hidden h-100">
+            <div class="card-body">
+                <div class="card-body-icon">
+                    <h5><i class="fas fa-fw fa-list mr-2"></i>Relatórios</h5>
+                </div>
+            </div>
+            <a class="card-footer text-white clearfix small z-1" href="{{ url_for('report') }}">
+                <span class="float-left">Acessar Serviço</span>
+                <span class="float-right">
+                    <i class="fas fa-angle-right"></i>
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

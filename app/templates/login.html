@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+        crossorigin="anonymous">
+
+    <title>SI Ceuma - Login</title>
+
+
+
+</head>
+
+<body class="bg-default">
+    <!--Menssagens de alerta-->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <ul class="flashes">
+                    <div class="alert alert-{{ category }}">
+                        <li>{{ message }}</li>
+                    </div>
+                </ul>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        <div class="text-center">
+            <img src="{{ url_for('static', filename='img/ceuma.png') }}">
+        </div>
+        <div class="card card-login mx-auto" style="max-width:400px">
+            <div class="card-header">Login</div>
+            <div class="card-body">
+                <form action="{{ url_for('login') }}" method="POST">
+                    {{ form.csrf_token }}
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            {{ form.username(class="form-control",
+                                placeholder="Nome de usuário") }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            {{ form.password(class="form-control",
+                                placeholder="Senha") }}
+                        </div>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            {{ form.remember_me }}Remember me
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <div class="text-center mt-2">
+                    <a class="d-block small" href="#">Esqueceu a senha?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    </script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}">
+    </script>
+    <script>
+        $( document ).ready(function() {
+            //fecha o aviso automaticamente apos 2 segundos
+            $(".alert").delay(2000).slideUp(500, function() {
+            $(this).alert('close');
+            });
+        });   
+    </script>
+
+</body>
+
+</html>

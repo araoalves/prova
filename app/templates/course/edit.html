@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('course') }}">Cursos</a></li>
+    <li class="breadcrumb-item active">Editar Curso</li>
+{% endblock %}
+
+{% block content %}
+    <h5 class="mb-4">Editar Curso</h5>
+    <form action="{{ url_for('editar_course', id=course.id) }}" method="POST">
+        <div class="form-group">
+            <div class="form-label-group">
+                <label for="codigo">Código do Curso</label>
+                <input type="text" id="codigo" name="codigo" class="form-control" value="{{ course.codigo }}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-label-group">
+                <label for="course">Nome do Curso</label>
+                <input type="text" id="course" name="course" class="form-control" value="{{ course.course }}" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-label-group">
+                    <label for="workload">Carga Horária</label>
+                    <input type="number" id="workload" name="workload" class="form-control" value="{{ course.workload }}" required>
+            </div>
+        </div>
+        <a class="btn btn-secondary" href="{{ url_for('course') }}">Cancelar</a>
+        <button class="btn btn-success" type="submit">Salvar</button>
+    </form>
+{% endblock %}
